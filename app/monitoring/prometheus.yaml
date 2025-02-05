@@ -44,15 +44,15 @@ metadata:
 data:
   prometheus.rules: |-
     groups:
-    - name: devopscube demo alert
+    - name: CPU usage of pods alert
       rules:
-      - alert: High Pod Memory
-        expr: sum(container_memory_usage_bytes) > 1
+      - alert: CPU usage of pods higher than 5%
+        expr: sum(irate(container_cpu_usage_seconds_total{container!=""}[1m])) by (namespace,pod) / sum(container_spec_cpu_quota{container!=""}/100000) by (namespace,pod) * 100 >= 5 
         for: 1m
         labels:
           severity: slack
         annotations:
-          summary: High Memory Usage
+          summary: High CPU usage {{ $value }}% for {{ $labels.pod }}
   prometheus.yml: |-
     global:
       scrape_interval: 5s
@@ -64,7 +64,7 @@ data:
       - scheme: http
         static_configs:
         - targets:
-          - "alertmanager.monitoring.svc:9093"
+          - "alertmanager-service:9093"
 
     scrape_configs:
       - job_name: 'node-exporter'
