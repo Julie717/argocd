@@ -1,0 +1,52 @@
+name: Validation Kubernetes manifests using kubeconform
+
+on:
+  pull_request:
+    types: [opened, reopened]
+  push:
+
+jobs:
+  kubeconform-check:
+    name: Check k8s manifests by kubeconform concurrently
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Install kubeconform
+        uses: yokawasa/action-setup-kube-tools@v0.11.2
+        with:
+          kubeconform: '0.6.7'
+
+      - name: Validate k8s manifests
+        id: validation
+        run: |
+          set +e #continue run even if one command fails
+          sudo apt-get install parallel
+          RESULT=`find app -regextype egrep -regex '.*ya?ml$' |  parallel --group 'echo {}; kubeconform --summary -schema-location default -schema-location https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json {}'`
+          ERRORS=`echo "$RESULT" | grep Summary: | awk '{sum+=$12;}{sum+=$13;} END{print sum;}'`
+         
+          MESSAGE=`echo $RESULT | tr '\n' ' '`
+          echo "$MESSAGE"
+          echo "MESSAGE=$MESSAGE" >> $GITHUB_OUTPUT
+          
+          STATUS=`if [ "$ERRORS" == "0" ]; then echo "success"; else echo "failure"; fi`
+          echo "STATUS=$STATUS" >> $GITHUB_OUTPUT
+          
+          set -e
+          if [ $STATUS == "failure" ]
+            then exit 1
+          fi
+
+      - name: Report to Slack
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          status: "${{ steps.validation.outputs.STATUS }}"
+        env:
+          SLACK_CHANNEL: app
+          SLACK_MESSAGE: "${{ steps.validation.outputs.MESSAGE }}"
+          SLACK_TITLE: Result of k8s manifests validation is ${{ steps.validation.outputs.STATUS }}
+          SLACK_USERNAME: rtCamp
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: ${{ job.status }}
