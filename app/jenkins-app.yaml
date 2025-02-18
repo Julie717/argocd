@@ -11,6 +11,6 @@ spec:
   source:
     chart: jenkins-app
     repoURL: https://julie717.github.io/kubernetes/
-    targetRevision: 0.1.0
+    targetRevision: 0.1.1
   syncPolicy:
     automated: {}
