@@ -5,12 +5,12 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: argocd
-    server: https://kubernetes.default.svc
+    namespace: ci-cd-helm
+    server: https://192.168.203.2:6443
   project: default
   source:
     chart: jenkins-app
     repoURL: https://julie717.github.io/kubernetes/
-    targetRevision: 0.1.1
+    targetRevision: 0.1.2
   syncPolicy:
     automated: {}
