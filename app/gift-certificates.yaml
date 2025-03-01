@@ -13,7 +13,7 @@ metadata:
       helm:
         parameters:
           - name: "BUILD_NUMBER"
-            value: "41"
+            string: "41"
         valueFiles:
           - values-pre-prod.yaml
       repoURL: https://julie717.github.io/helm-releases/
