@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gift-certificates-prod
+  namespace: argocd
+spec:
+  destination:
+    namespace: prod
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: gift-certificates
+    helm:
+      parameters:
+        - name: "deployment.container.image"
+          value: image
+      valueFiles:
+        - values-prod.yaml
+    repoURL: https://julie717.github.io/helm-releases/
+    targetRevision: 0.0.4
+  syncPolicy:
+    automated: {}
