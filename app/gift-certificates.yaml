@@ -12,8 +12,8 @@ spec:
     chart: gift-certificates
     helm:
       parameters:
-        - name: "BUILD_NUMBER"
-          value: "41"
+        - name: "deployment.container.image"
+          value: "ybuyalskaya/gift-certificates:41"
       valueFiles:
         - values-pre-prod.yaml
     repoURL: https://julie717.github.io/helm-releases/
