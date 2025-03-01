@@ -3,17 +3,20 @@ kind: Application
 metadata:
   name: gift-certificates
   namespace: argocd
-  spec:
-    destination:
-      namespace: pre-prod
-      server: https://kubernetes.default.svc
-    project: default
-    source:
-      chart: gift-certificates
-      helm:
-        valueFiles:
-          - values-pre-prod.yaml
-      repoURL: https://julie717.github.io/helm-releases/
-      targetRevision: 0.0.2
-    syncPolicy:
-      automated: {}
+spec:
+  destination:
+    namespace: pre-prod
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: gift-certificates
+    helm:
+      parameters:
+        - name: "BUILD_NUMBER"
+          value: "41"
+      valueFiles:
+        - values-pre-prod.yaml
+    repoURL: https://julie717.github.io/helm-releases/
+    targetRevision: 0.0.2
+  syncPolicy:
+    automated: {}
