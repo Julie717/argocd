@@ -11,9 +11,6 @@ metadata:
     source:
       chart: gift-certificates
       helm:
-        parameters:
-          - name: "BUILD_NUMBER"
-            string: "41"
         valueFiles:
           - values-pre-prod.yaml
       repoURL: https://julie717.github.io/helm-releases/
