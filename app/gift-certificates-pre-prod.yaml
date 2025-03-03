@@ -13,7 +13,7 @@ spec:
     helm:
       parameters:
         - name: "deployment.container.image"
-          value: image
+          value: 'ybuyalskaya/gift-certificates:66'
       valueFiles:
         - values-pre-prod.yaml
     repoURL: https://julie717.github.io/helm-releases/
