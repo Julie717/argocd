@@ -13,10 +13,10 @@ spec:
     helm:
       parameters:
         - name: "deployment.container.image"
-          value: image
+          value: 'ybuyalskaya/gift-certificates:74'
       valueFiles:
         - values-prod.yaml
     repoURL: https://julie717.github.io/helm-releases/
-    targetRevision: 0.0.4
+    targetRevision: 0.0.6
   syncPolicy:
     automated: {}
