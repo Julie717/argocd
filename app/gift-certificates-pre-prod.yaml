@@ -17,6 +17,6 @@ spec:
       valueFiles:
         - values-pre-prod.yaml
     repoURL: https://julie717.github.io/helm-releases/
-    targetRevision: 8.8.8
+    targetRevision: 0.0.6
   syncPolicy:
     automated: {}
